@@ -1,0 +1,266 @@
+{
+  "fruits": [
+    {
+      "id": "1",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 400,
+      "image": "img/fruite-item-5.jpg",
+      "type": "fresh"
+    },
+    {
+      "id": "2",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 500,
+      "image": "img/fruite-item-5.jpg",
+      "type": "Sales"
+    },
+    {
+      "id": "3",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 400,
+      "image": "img/fruite-item-2.jpg",
+      "type": "Organic"
+    },
+    {
+      "id": "4",
+      "name": "Apricots",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 300,
+      "image": "img/fruite-item-4.jpg",
+      "type": "Sales"
+    },
+    {
+      "id": "5",
+      "name": "Banana",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 5000,
+      "image": "img/fruite-item-3.jpg",
+      "type": "fresh"
+    },
+    {
+      "id": "6",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4000,
+      "image": "img/fruite-item-1.jpg",
+      "type": "Expired"
+    },
+    {
+      "id": "7",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 1000,
+      "image": "img/fruite-item-2.jpg",
+      "type": "Organic"
+    },
+    {
+      "id": "8",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 550,
+      "image": "img/fruite-item-5.jpg",
+      "type": "Discount"
+    },
+    {
+      "id": "9",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 6000,
+      "image": "img/fruite-item-1.jpg",
+      "type": "Expired"
+    }
+  ],
+  "productes": [
+    {
+      "id": "2",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 500,
+      "image": "img/fruite-item-5.jpg",
+      "type": "Sales"
+    },
+    {
+      "id": "3",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 1000,
+      "image": "img/fruite-item-2.jpg",
+      "type": "Organic"
+    },
+    {
+      "id": "4",
+      "name": "Apricots",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 400,
+      "image": "img/fruite-item-4.jpg",
+      "type": "Sales"
+    },
+    {
+      "id": "5",
+      "name": "Banana",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 500,
+      "image": "img/fruite-item-3.jpg",
+      "type": "fresh"
+    },
+    {
+      "id": "6",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 200,
+      "image": "img/fruite-item-1.jpg",
+      "type": "Expired"
+    },
+    {
+      "id": "7",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 600,
+      "image": "img/fruite-item-2.jpg",
+      "type": "Organic"
+    },
+    {
+      "id": "2",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4000,
+      "image": "img/fruite-item-5.jpg",
+      "type": "Sales"
+    },
+    {
+      "id": "8",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 560,
+      "image": "img/fruite-item-5.jpg",
+      "type": "Discount"
+    },
+    {
+      "id": "9",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 900,
+      "image": "img/fruite-item-1.jpg",
+      "type": "Expired"
+    }
+  ],
+  "review": [
+    {
+      "id": "7ba6",
+      "name": "om talaviya",
+      "email": "sanjanatalav@gmailcom",
+      "review": "nice but not least productes . as satisfieing as i."
+    },
+    {
+      "id": "2cdf",
+      "name": "sanjana",
+      "email": "sanjanatalav@gmailcom",
+      "review": "nice good so goo looking so elegent o beautiful..."
+    },
+    {
+      "id": "fa31",
+      "name": "rrrr",
+      "email": "sanjana@gmail.com",
+      "review": "nice productes u must buy it......"
+    }
+  ],
+  "coupon": [
+    {
+      "id": "492b",
+      "couponcode": "abc12",
+      "per": 10,
+      "expDate": "2024-04-10",
+      "createdOn": "23/04/2024"
+    },
+    {
+      "id": "e8af",
+      "couponcode": "abc1",
+      "per": 10,
+      "expDate": "2024-05-03",
+      "createdOn": "23/04/2024"
+    },
+    {
+      "id": "eb15",
+      "couponcode": "ABC1",
+      "per": 9,
+      "expDate": "2024-05-10",
+      "createdOn": "24/04/2024"
+    },
+    {
+      "id": "3d07",
+      "couponcode": "123",
+      "per": 50,
+      "expDate": "2024-05-10",
+      "createdOn": "24/04/2024"
+    }
+  ],
+  "shop": [
+    {
+      "id": "1",
+      "name": "mango",
+      "price": 200
+    },
+    {
+      "id": "e91c"
+    },
+    {
+      "id": "820e"
+    },
+    {
+      "id": "2117"
+    },
+    {
+      "id": "17f5"
+    },
+    {
+      "id": "571b"
+    },
+    {
+      "id": "caee"
+    },
+    {
+      "id": "8d31"
+    }
+  ],
+  "contact": [
+    {
+      "id": "d1e1",
+      "address": "surat",
+      "email": "raktpx2356@gmail.com",
+      "phone": 54541516
+    },
+    {
+      "id": "4c6c",
+      "address": "vapi",
+      "email": "rw@DG.VOM",
+      "phone": 654196146
+    },
+    {
+      "id": "f232",
+      "address": "valsad",
+      "email": "sssss@gmail.com",
+      "phone": 323216564158
+    },
+    {
+      "id": "0bbc",
+      "address": "mumbai",
+      "email": "rw@DG.VOM",
+      "phone": 123456789
+    },
+    {
+      "id": "a907",
+      "address": "surat",
+      "email": "rw@DG.VOM",
+      "phone": 352165654
+    },
+    {
+      "id": "d1e1",
+      "address": "surat",
+      "email": "raktpx2356@gmail.com",
+      "phone": 54
+    }
+  ]
+}
