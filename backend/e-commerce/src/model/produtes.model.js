@@ -28,6 +28,12 @@ const productesSchema = new mongoose.Schema(
             required: true,
             trim: true
         },
+        image: {
+            type: {
+                public_id: String,
+                url: String
+            },
+        },
         isActive: {
             type: Boolean,
             default: true

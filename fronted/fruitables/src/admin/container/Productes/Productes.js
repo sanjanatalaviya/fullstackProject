@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DataGrid } from '@mui/x-data-grid';
 import { useFormik } from 'formik';
-import { object, string } from 'yup';
+import { mixed, object, string } from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -22,7 +22,8 @@ import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/m
 function Productes(props) {
   const [open, setOpen] = React.useState(false);
   const [update, setupdate] = useState(false);
-  const [data, setData] = useState([]);
+  const [selectsub, setselectsub] = useState([]);
+  // const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -74,6 +75,20 @@ function Productes(props) {
     { field: 'description', headerName: 'Description', width: 160 },
     { field: 'price', headerName: 'Price', width: 160 },
     {
+      field: "image",
+      headerName: "Image",
+      width: 150,
+      renderCell: (params) => {
+        console.log(params.row.image);
+        if (params.row.image && params.row.image.url) {
+          return <img src={params.row.image.url
+          } alt={params.row.name} width={50} />;
+        } else {
+          return null;
+        }
+      },
+    },
+    {
       field: 'action',
       headerName: 'Action',
       width: 160,
@@ -95,7 +110,17 @@ function Productes(props) {
     subcategory_id: string().required("please select subcategory"),
     name: string().required("please enter name"),
     description: string().required("please enter description"),
-    price: string().required("please enter price")
+    price: string().required("please enter price"),
+    image: mixed()
+      .required("Please select an image")
+      .test("fileSize", "The file is too large", (value) => {
+        return value && value.size <= 2 * 1024 * 1024; // 2MB
+      })
+      .test("fileType", "Unsupported File Format", (value) => {
+        return (
+          value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+        );
+      }),
   });
 
   const formik = useFormik({
@@ -104,33 +129,68 @@ function Productes(props) {
       subcategory_id: '',
       name: '',
       description: '',
-      price: ''
+      price: '',
+      image: ''
     },
     validationSchema: productSchema,
     onSubmit: (values, { resetForm }) => {
-      if (update) {
-        dispatch(editProductes(values))
-      } else {
-        dispatch(addProductes(values))
+      const fileValid = validateFile(values.image);
+
+      if (fileValid) {
+        if (update) {
+          dispatch(editProductes(values))
+        } else {
+          dispatch(addProductes(values))
+          console.log(values);
+        }
+        resetForm()
+        handleClose()
       }
-      resetForm()
-      handleClose()
     },
   });
 
   const { handleSubmit, handleChange, handleBlur, errors, values, touched, setFieldValue } = formik;
 
   const changeCategorySelect = (event) => {
-    const selectedCategoryId = event.target.value;
-    setFieldValue("category_id", selectedCategoryId);
+    setFieldValue('category_id', event.target.value);
+    handlesunBycat(event.target.value);
     setFieldValue("subcategory_id", "");
   };
 
   const changeSubcategorySelect = (event) => {
-    setFieldValue("subcategory_id", event.target.value);
+    const selectedSubcategoryId = event.target.value;
+    setFieldValue("subcategory_id", selectedSubcategoryId);
   };
 
-  const filteredSubcategories = subcategories.filter(subcategory => subcategory.category_id === values.category_id);
+  const handlesunBycat = async (category_id) => {
+    try {
+      const respomse = await fetch(`http://localhost:8000/api/v1/subcategories/getsubByCategory/${category_id}`);
+      const data = await respomse.json();
+      setselectsub(data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  // const filteredSubcategories = subcategories.filter(subcategory => subcategory.category_id === values.category_id);
+  // const filteredSubcategories = subcategories && subcategories.filter(subcategory => subcategory.category_id === values.category_id);
+
+  const validateFile = (file) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+    if (!file) {
+      return true;
+    }
+    if (!allowedTypes.includes(file.type)) {
+      alert('File type not allowed. Please select a JPEG, PNG, or SVG file.');
+      return false;
+    }
+    if (file.size > maxFileSize) {
+      alert('File size exceeds the limit of 2MB.');
+      return false;
+    }
+    return true;
+  };
 
   return (
     <>
@@ -145,7 +205,7 @@ function Productes(props) {
               onClose={handleClose}
             >
               <DialogTitle>Add Product</DialogTitle>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} enctype="multipart/form-data" method="post">
                 <DialogContent>
                   <FormControl fullWidth>
                     <InputLabel id="category-select-label">Select Categories</InputLabel>
@@ -179,12 +239,30 @@ function Productes(props) {
                       disabled={!values.category_id}
                       error={errors.subcategory_id && touched.subcategory_id ? true : false}
                     >
-                      {filteredSubcategories.map((v) => (
+                      {selectsub.map((v) => (
                         <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
                       ))}
                     </Select>
                     {errors.subcategory_id && touched.subcategory_id && <span style={{ color: 'red' }}>{errors.subcategory_id}</span>}
                   </FormControl>
+                  <br /><br />
+                  <input
+                    id="image"
+                    name="image"
+                    label="image"
+                    type="file"
+                    fullWidth
+                    variant="standard"
+                    onChange={(event) => {
+                      setFieldValue("image", event.currentTarget.files[0]);
+                    }}
+                    onBlur={handleBlur}
+
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <br></br><br></br>
+                  {errors.image && touched.image ? <span style={{ color: "red" }}>{errors.image}</span> : null}
+
                   <TextField
                     margin="dense"
                     id="name"

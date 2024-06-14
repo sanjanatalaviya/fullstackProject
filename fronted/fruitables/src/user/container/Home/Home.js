@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFacilities } from '../../../redux/action/facilities.action';
 import { ThemeContext } from '../../../context/ThemeContext';
 import Button from '../../component/UI/Button/Button';
+import { Link } from 'react-router-dom';
 import { PrimaryButton } from '../../component/UI/Button/Button.styled';
+import { NavLink } from 'react-router-dom';
+import { Box, Menu, MenuItem } from '@mui/material'
 
 function Home(props) {
   let carouselOpt = {
@@ -78,10 +81,36 @@ function Home(props) {
 
   useEffect(() => {
     dispatch(getFacilities());
+    // dispatch((()));
   }, []);
 
   const facilities = useSelector(state => state.facilities);
   console.log(facilities);
+  const categories = useSelector(state => state.category.category);
+  const subcategories = useSelector(state => state.subcategories.subcategories)
+  console.log(categories, subcategories);
+
+  const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
+  const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const handleClose = () => {
+        setCategoryAnchorEl(null);
+        setSubcategoryAnchorEl(null);
+    };
+
+
+  const handleCategoryClick = (event, category) => {
+    setSelectedCategory(category);
+    setCategoryAnchorEl(event.currentTarget);
+    setSubcategoryAnchorEl(null);
+    setSelectedSubcategory(null);
+  };
+
+  const handleSubcategoryClick = (event, subcategory) => {
+    setSelectedSubcategory(subcategory);
+    setSubcategoryAnchorEl(event.currentTarget);
+  };
 
   return (
     <div>
@@ -123,6 +152,55 @@ function Home(props) {
         </div>
       </div>
       {/* Hero End */}
+      <div>
+        <Box sx={{ display: 'flex', padding: 2 }}>
+          {categories.map(category => (
+            <Box key={category.id} sx={{ margin: '0 10px' }}>
+              <Button
+                aria-controls="category-menu"
+                aria-haspopup="true"
+                onClick={(e) => handleCategoryClick(e, category)}
+              >
+                {category.name}
+              </Button>
+              <Menu
+                id="category-menu"
+                anchorEl={categoryAnchorEl}
+                open={selectedCategory === category && Boolean(categoryAnchorEl)}
+                onClose={handleClose}
+              >
+                {subcategories
+                  .filter(subcategory => subcategory.categoryId === category.id)
+                  .map(subcategory => (
+                    <MenuItem
+                      key={subcategory.id}
+                      onClick={(e) => handleSubcategoryClick(e, subcategory)}
+                    >
+                      {subcategory.name}
+                    </MenuItem>
+                  ))}
+              </Menu>
+              {selectedCategory === category && (
+                <Menu
+                  id="subcategory-menu"
+                  anchorEl={subcategoryAnchorEl}
+                  open={Boolean(subcategoryAnchorEl)}
+                  onClose={handleClose}
+                >
+                  {/* {products
+                                        .filter(product => product.subcategoryId === selectedSubcategory?.id)
+                                        .map(product => (
+                                            <MenuItem key={product.id} onClick={handleClose}>
+                                                {product.name}
+                                            </MenuItem>
+                                        ))} */}
+                </Menu>
+              )}
+            </Box>
+          ))}
+        </Box>
+      </div >
+
       {/* Featurs Section Start */}
       <div className="container-fluid featurs py-5">
         <div className="container py-5">

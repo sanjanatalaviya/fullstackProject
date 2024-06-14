@@ -1,5 +1,6 @@
 const express = require('express');
 const { productesController } = require('../../../../controller');
+const upload = require('../../../middleware/upload');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.get('/list-productes',
 );
 
 router.post('/add-productes',
+    upload.single('image'),
     productesController.addProductes
 );
 

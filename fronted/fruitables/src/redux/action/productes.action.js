@@ -2,9 +2,9 @@ import { baseURL } from "../../utils/baseURL";
 import axios from 'axios';
 import { ADD_PRODUCTES, DELETE_PRODUCTES, ERROR_PRODUCTES, GET_PRODUCTES, LOADING_PRODUCTES, UPDATE_PRODUCTES } from "../ActionTypes";
 
-// const handleLoading = () => async (dispatch) => {
-//     dispatch({ type: LOADING_PRODUCTES })
-// }
+const handleLoading = () => async (dispatch) => {
+    dispatch({ type: LOADING_PRODUCTES })
+}
 
 export const errorProductes = (error) => async (dispatch) => {
     dispatch({ type: ERROR_PRODUCTES, payload: error })
@@ -32,16 +32,12 @@ export const getProductes = () => async (dispatch) => {
 
 export const addProductes = (product) => async (dispatch) => {
     try {
-        const response = await fetch('http://localhost:8000/api/v1/productes/add-productes', {
-            method: 'POST',
+        const response = await axios.post("http://localhost:8000/api/v1/productes/add-productes", product, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             },
-            body: JSON.stringify(product)
-        });
-        const data = await response.json();
-        console.log(data);
-        dispatch({ type: ADD_PRODUCTES, payload: data })
+        })
+        dispatch({ type: ADD_PRODUCTES, payload: response.data.data });
         // await axios.post(baseURL + "productes", data)
         //     .then((response) => dispatch({ type: ADD_PRODUCTES, payload: response.data }))
         //     .catch((error) => {
@@ -70,14 +66,15 @@ export const deleteProductes = (id) => async (dispatch) => {
 
 export const editProductes = (product) => async (dispatch) => {
     try {
-        await fetch(`localhost:8000/api/v1/productes/update-productes/${product._id}`, {
+        const response = await fetch(`localhost:8000/api/v1/productes/update-productes/${product._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(product)
         });
-        dispatch({ type: UPDATE_PRODUCTES, payload: product })
+        const finaldata = await response.json();
+        dispatch({ type: UPDATE_PRODUCTES, payload: finaldata })
         // await axios.put(baseURL + "productes/" + data.id, data)
         //     .then(dispatch({ type: UPDATE_PRODUCTES, payload: data }))
         //     .catch((error) => {

@@ -34,8 +34,6 @@ export const addreview = (data) => async (dispatch) => {
     }
 }
 
-
-
 export const deleteReview = (id) => async (dispatch) => {
     try {
         await axios.delete(baseURL + "review/" + id)
