@@ -23,20 +23,42 @@ function Productes(props) {
   const [open, setOpen] = React.useState(false);
   const [update, setupdate] = useState(false);
   const [selectsub, setselectsub] = useState([]);
+  const [categoriesdata, setcategoriesdata] = useState([]);
+  const [subcategoriesdata, setsubcategoriesdata] = useState([]);
   // const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
 
   const productes = useSelector(state => state.productes);
-  const subcategories = useSelector(state => state.subcategories.subcategories);
+  console.log(productes);
+  // const subcategories = useSelector(state => state.subcategories.subcategories);
   const categories = useSelector(state => state.category.category);
 
   useEffect(() => {
     // getProduct()
-    dispatch(getProductes())
-    dispatch(getCategory())
-    dispatch(getSubData())
-  }, [dispatch])
+    dispatch(getProductes());
+    categorycall();
+    subcategorycall();
+    // dispatch(getCategory())
+    dispatch(getSubData());
+  }, [dispatch]);
+
+  const categorycall = async () => {
+    const response = await fetch('http://localhost:8000/api/v1/categories/list-categories');
+    const data = await response.json();
+    setcategoriesdata(data.data)
+  }
+
+  const subcategorycall = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/subcategories/list-subcategories");
+      const data = await response.json();
+      console.log(data);
+      setsubcategoriesdata(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,21 +75,21 @@ function Productes(props) {
   const handelEdit = (data) => {
     formik.setValues(data);
     setOpen(true);
-    setupdate(true)
+    setupdate(data._id);
   }
 
   const columns = [
     {
       field: 'category_id', headerName: 'Category', width: 150,
       renderCell: (params) => {
-        const categoryData = categories.find(v => v._id === params.row.category_id);
+        const categoryData = categoriesdata.find((v) => v._id === params.row.category_id);
         return categoryData ? categoryData.name : '';
       }
     },
     {
       field: 'subcategory_id', headerName: ' Subcategory Name', width: 160,
       valueGetter: (params) => {
-        const subcategory = subcategories.find((v) => v._id === params.row.subcategory_id);
+        const subcategory = subcategoriesdata.find((v) => v._id === params.row.subcategory_id);
         return subcategory ? subcategory.name : "";
       }
     },
@@ -138,7 +160,7 @@ function Productes(props) {
 
       if (fileValid) {
         if (update) {
-          dispatch(editProductes(values))
+          dispatch(editProductes({ ...values, _id: update }))
         } else {
           dispatch(addProductes(values))
           console.log(values);
@@ -152,24 +174,20 @@ function Productes(props) {
   const { handleSubmit, handleChange, handleBlur, errors, values, touched, setFieldValue } = formik;
 
   const changeCategorySelect = (event) => {
-    setFieldValue('category_id', event.target.value);
-    handlesunBycat(event.target.value);
+    setFieldValue("category_id", event.target.value);
+    handlecategoryChange(event.target.value);
     setFieldValue("subcategory_id", "");
   };
 
-  const changeSubcategorySelect = (event) => {
-    const selectedSubcategoryId = event.target.value;
-    setFieldValue("subcategory_id", selectedSubcategoryId);
-  };
+  // const changeSubcategorySelect = (event) => {
+  //   const selectedSubcategoryId = event.target.value;
+  //   setFieldValue("subcategory_id", selectedSubcategoryId);
+  // };
 
-  const handlesunBycat = async (category_id) => {
-    try {
-      const respomse = await fetch(`http://localhost:8000/api/v1/subcategories/getsubByCategory/${category_id}`);
-      const data = await respomse.json();
-      setselectsub(data.data);
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handlecategoryChange = async (category_id) => {
+    const respomse = await fetch(`http://localhost:8000/api/v1/subcategories/getsubByCategory/${category_id}`);
+    const data = await respomse.json();
+    setselectsub(data.data);
   }
   // const filteredSubcategories = subcategories.filter(subcategory => subcategory.category_id === values.category_id);
   // const filteredSubcategories = subcategories && subcategories.filter(subcategory => subcategory.category_id === values.category_id);
@@ -208,33 +226,32 @@ function Productes(props) {
               <form onSubmit={handleSubmit} enctype="multipart/form-data" method="post">
                 <DialogContent>
                   <FormControl fullWidth>
-                    <InputLabel id="category-select-label">Select Categories</InputLabel>
+                    <InputLabel id="category_id-label">Select Categories</InputLabel>
                     <Select
-                      labelId="category-select-label"
-                      id="category-select"
+                      labelId="category_id-label"
+                      id="category_id"
                       value={values.category_id}
                       label="Category"
                       name="category_id"
                       onChange={changeCategorySelect}
-                      onBlur={handleBlur}
                       input={<OutlinedInput label="Select Category" />}
-                      error={errors.category_id && touched.category_id ? true : false}
+                      error={errors.category_id && touched.category_id && <span style={{ color: "red" }}>{errors.category_id}</span>}
                     >
-                      {categories.map((v) => (
+                      {categoriesdata.map((v) => (
                         <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
                       ))}
                     </Select>
                     {errors.category_id && touched.category_id && <span style={{ color: 'red' }}>{errors.category_id}</span>}
                   </FormControl>
                   <FormControl fullWidth>
-                    <InputLabel id="subcategory-select-label">Select Subcategories</InputLabel>
+                    <InputLabel id="subcategory_id-label">Select Subcategories</InputLabel>
                     <Select
-                      labelId="subcategory-select-label"
-                      id="subcategory-select"
+                      labelId="subcategory_id-label"
+                      id="subcategory_id"
                       value={values.subcategory_id}
                       label="Subcategory"
                       name="subcategory_id"
-                      onChange={changeSubcategorySelect}
+                      onChange={handleChange}
                       onBlur={handleBlur} input={<OutlinedInput label="Select subcategory" />}
                       disabled={!values.category_id}
                       error={errors.subcategory_id && touched.subcategory_id ? true : false}
@@ -262,7 +279,6 @@ function Productes(props) {
                   />
                   <br></br><br></br>
                   {errors.image && touched.image ? <span style={{ color: "red" }}>{errors.image}</span> : null}
-
                   <TextField
                     margin="dense"
                     id="name"

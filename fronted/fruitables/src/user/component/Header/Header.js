@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../../../context/ThemeContext';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { PrimaryButton } from '../../component/UI/Button/Button.styled';
+// import { NavLink } from 'react-router-dom';
+import { Box, Menu, MenuItem } from '@mui/material';
+import Button from '../../component/UI/Button/Button';
+import { getFacilities } from '../../../redux/action/facilities.action';
 
 function Header(props) {
     const cart = useSelector(state => state.cart);
@@ -19,6 +24,37 @@ function Header(props) {
         themecontext.toggleTheme(themecontext.theme);
     }
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getFacilities());
+        // dispatch((()));
+    }, []);
+
+    const categories = useSelector(state => state.category.category);
+    const subcategories = useSelector(state => state.subcategories.subcategories)
+    console.log(categories, subcategories);
+
+    const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
+    const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+
+    const handleClose = () => {
+        setCategoryAnchorEl(null);
+        setSubcategoryAnchorEl(null);
+    };
+    const handleCategoryClick = (event, category) => {
+        setSelectedCategory(category);
+        setCategoryAnchorEl(event.currentTarget);
+        setSubcategoryAnchorEl(null);
+        setSelectedSubcategory(null);
+    };
+
+    const handleSubcategoryClick = (event, subcategory) => {
+        setSelectedSubcategory(subcategory);
+        setSubcategoryAnchorEl(event.currentTarget);
+    };
     return (
         <div>
             {/* Navbar start */}
@@ -105,8 +141,56 @@ function Header(props) {
                 </div>
             </div>
             {/* Modal Search End */}
+            <br /><br /><br /><br /><br/><br/><br/><br/>
+            <div>
+                <Box sx={{ display: 'flex', padding: 2 }}>
+                    {categories.map(category => (
+                        <Box key={category.id} sx={{ margin: '0 10px' }}>
+                            <Button
+                                aria-controls="category-menu"
+                                aria-haspopup="true"
+                                onClick={(e) => handleCategoryClick(e, category)}
+                            >
+                                {category.name}
+                            </Button>
+                            <Menu
+                                id="category-menu"
+                                anchorEl={categoryAnchorEl}
+                                open={selectedCategory === category && Boolean(categoryAnchorEl)}
+                                onClose={handleClose}
+                            >
+                                {subcategories
+                                    .filter(subcategory => subcategory.categoryId === category.id)
+                                    .map(subcategory => (
+                                        <MenuItem
+                                            key={subcategory.id}
+                                            onClick={(e) => handleSubcategoryClick(e, subcategory)}
+                                        >
+                                            {subcategory.name}
+                                        </MenuItem>
+                                    ))}
+                            </Menu>
+                            {selectedCategory === category && (
+                                <Menu
+                                    id="subcategory-menu"
+                                    anchorEl={subcategoryAnchorEl}
+                                    open={Boolean(subcategoryAnchorEl)}
+                                    onClose={handleClose}
+                                >
+                                    {/* {products
+                                        .filter(product => product.subcategoryId === selectedSubcategory?.id)
+                                        .map(product => (
+                                            <MenuItem key={product.id} onClick={handleClose}>
+                                                {product.name}
+                                            </MenuItem>
+                                        ))} */}
+                                </Menu>
+                            )}
+                        </Box>
+                    ))}
+                </Box>
+            </div >
         </div>
-
     );
 }
 
