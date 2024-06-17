@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { addToCart } from '../../../slice/cart.slice';
+import { getProductes } from '../../../redux/action/productes.action';
 
 function Shopdetails(props) {
     const [fruitdata, setfruitdata] = useState([]);
@@ -20,7 +21,7 @@ function Shopdetails(props) {
     const dispatch = useDispatch();
 
     const cart = useSelector(state => state.cart);
-    const productes = useSelector(state => state.productes);
+    const productes = useSelector(state => state.productes.productes);
     console.log(cart, productes);
 
     const shopimage = useSelector(state => state.shop);
@@ -93,6 +94,7 @@ function Shopdetails(props) {
 
         useEffect(() => {
             // getData();
+            dispatch(getProductes());
             dispatch(getreview());
             const image = shopimage.shop.find((v) => v.id === id)
             console.log(image);

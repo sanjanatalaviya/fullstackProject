@@ -4,18 +4,16 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../../../context/ThemeContext';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { PrimaryButton } from '../../component/UI/Button/Button.styled';
-// import { NavLink } from 'react-router-dom';
 import { Box, Menu, MenuItem } from '@mui/material';
 import Button from '../../component/UI/Button/Button';
 import { getFacilities } from '../../../redux/action/facilities.action';
+import { getCategory } from '../../../redux/action/category.action';
+import { getSubData } from '../../../slice/subcategory.slice';
 
 function Header(props) {
     const cart = useSelector(state => state.cart);
     console.log(cart);
-
     let cartQty = cart.cart.reduce((acc, curr) => acc + curr.qty, 0);
-    // console.log(cartQty);
 
     const themecontext = useContext(ThemeContext);
     console.log(themecontext);
@@ -28,33 +26,40 @@ function Header(props) {
 
     useEffect(() => {
         dispatch(getFacilities());
-        // dispatch((()));
+        dispatch(getCategory());
+        dispatch(getSubData());
     }, []);
 
     const categories = useSelector(state => state.category.category);
-    const subcategories = useSelector(state => state.subcategories.subcategories)
-    console.log(categories, subcategories);
+    const subcategories = useSelector(state => state.subcategories.subcategories);
+    const products = useSelector(state => state.productes.productes);
+    console.log(categories, subcategories, products);
 
     const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
     const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
-    const handleClose = () => {
-        setCategoryAnchorEl(null);
-        setSubcategoryAnchorEl(null);
-    };
     const handleCategoryClick = (event, category) => {
         setSelectedCategory(category);
         setCategoryAnchorEl(event.currentTarget);
-        setSubcategoryAnchorEl(null);
-        setSelectedSubcategory(null);
     };
 
     const handleSubcategoryClick = (event, subcategory) => {
         setSelectedSubcategory(subcategory);
-        setSubcategoryAnchorEl(event.currentTarget);
+        setSubcategoryAnchorEl(null);
     };
+
+    const handleCategoryMouseEnter = (event, category) => {
+        setSelectedCategory(category);
+        setCategoryAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setCategoryAnchorEl(null);
+        setSubcategoryAnchorEl(null);
+    };
+
     return (
         <div>
             {/* Navbar start */}
@@ -141,14 +146,14 @@ function Header(props) {
                 </div>
             </div>
             {/* Modal Search End */}
-            <br /><br /><br /><br /><br/><br/><br/><br/>
+            <br /><br /><br /><br /><br /><br /><br /><br />
             <div>
                 <Box sx={{ display: 'flex', padding: 2 }}>
                     {categories.map(category => (
                         <Box key={category.id} sx={{ margin: '0 10px' }}>
                             <Button
                                 aria-controls="category-menu"
-                                aria-haspopup="true"
+                                onMouseEnter={(e) => handleCategoryMouseEnter(e, category)} // <-- Handle mouse enter
                                 onClick={(e) => handleCategoryClick(e, category)}
                             >
                                 {category.name}
@@ -160,7 +165,7 @@ function Header(props) {
                                 onClose={handleClose}
                             >
                                 {subcategories
-                                    .filter(subcategory => subcategory.categoryId === category.id)
+                                    .filter(subcategory => subcategory.category_id === category._id)
                                     .map(subcategory => (
                                         <MenuItem
                                             key={subcategory.id}
@@ -170,26 +175,23 @@ function Header(props) {
                                         </MenuItem>
                                     ))}
                             </Menu>
-                            {selectedCategory === category && (
-                                <Menu
-                                    id="subcategory-menu"
-                                    anchorEl={subcategoryAnchorEl}
-                                    open={Boolean(subcategoryAnchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    {/* {products
-                                        .filter(product => product.subcategoryId === selectedSubcategory?.id)
-                                        .map(product => (
-                                            <MenuItem key={product.id} onClick={handleClose}>
-                                                {product.name}
-                                            </MenuItem>
-                                        ))} */}
-                                </Menu>
-                            )}
                         </Box>
                     ))}
                 </Box>
-            </div >
+                {selectedCategory && selectedSubcategory && (
+                    <Box sx={{ margin: '20px 10px' }}>
+                        <h3>{selectedSubcategory.name}</h3>
+                        {products.filter(product => product.subcategory_id === selectedSubcategory._id)
+                            .map(product => (
+                                <Box key={product._id} sx={{ margin: '10px 0' }}>
+                                    <h4>{product.name}</h4>
+                                    <h4>{product.description}</h4>
+                                    <h2>Price: {product.price}</h2>
+                                </Box>
+                            ))}
+                    </Box>
+                )}
+            </div>
         </div>
     );
 }

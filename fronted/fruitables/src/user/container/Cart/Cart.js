@@ -30,7 +30,7 @@ function Cart(props) {
 
     const cartData = cart.cart.map((v) => {
         console.log(v);
-        let data = productes.productes.find((x) => x.id === v.pid);
+        let data = productes.productes.find((x) => x._id === v.pid);
         console.log(data);
         return { ...data, Qty: v.qty }
     })
@@ -133,7 +133,7 @@ function Cart(props) {
                                     <tr>
                                         <th scope="row">
                                             <div className="d-flex align-items-center">
-                                                <img src={v.image} className="img-fluid me-5 rounded-square" style={{ width: 80, height: 80 }} alt />
+                                                <img src={v.image.url} className="img-fluid me-5 rounded-square" style={{ width: 80, height: 80 }} alt />
                                             </div>
                                         </th>
                                         <td>
