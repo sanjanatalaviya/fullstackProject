@@ -104,18 +104,30 @@ const deleteProductes = async (req, res) => {
 
 const updateProductes = async (req, res) => {
     try {
-        const product = await Productes.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
-        if (!product) {
-            res.status(404).json({
+        console.log(req.params.product_id);
+        if (typeof req.params.product_id === String || typeof req.params.product_id === Object) {
+            const product = await Productes.findByIdAndUpdate(req.params.product_id, req.body, {
+                new: true,
+                runValidators: true
+            });
+            if (!product) {
+                res.status(404).json({
+                    success: false,
+                    message: "product data is not found."
+                })
+            }
+            res.status(201).json({
+                success: true,
+                message: "product updated successfully.",
+                data: product
+            })
+        } else {
+            res.status(400).json({
                 success: false,
-                message: "product data is not found."
             })
         }
-        res.status(201).json({
-            success: true,
-            message: "product updated successfully.",
-            data: product
-        })
+        // const product = await Productes.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
+
     } catch (error) {
         res.status(500).json({
             success: false,

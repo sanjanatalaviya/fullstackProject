@@ -136,12 +136,18 @@ function Productes(props) {
     image: mixed()
       .required("Please select an image")
       .test("fileSize", "The file is too large", (value) => {
-        return value && value.size <= 2 * 1024 * 1024; // 2MB
+        if (value.size) {
+          return value && value.size <= 2 * 1024 * 1024; // 2MB
+        }
+        return true;
       })
       .test("fileType", "Unsupported File Format", (value) => {
-        return (
-          value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
-        );
+        if (value.type) {
+          return (
+            value && ["image/jpeg", "image/png", "image/svg"].includes(value.type)
+          );
+        }
+        return true;
       }),
   });
 
@@ -200,11 +206,11 @@ function Productes(props) {
       return true;
     }
     if (!allowedTypes.includes(file.type)) {
-      alert('File type not allowed. Please select a JPEG, PNG, or SVG file.');
+      // alert('File type not allowed. Please select a JPEG, PNG, or SVG file.');
       return false;
     }
     if (file.size > maxFileSize) {
-      alert('File size exceeds the limit of 2MB.');
+      // alert('File size exceeds the limit of 2MB.');
       return false;
     }
     return true;
@@ -274,10 +280,13 @@ function Productes(props) {
                       setFieldValue("image", event.currentTarget.files[0]);
                     }}
                     onBlur={handleBlur}
-
                     sx={{ marginBottom: 2 }}
                   />
-                  <br></br><br></br>
+                  <br /><br /><br />
+                  {
+                    values.image &&
+                    <img src={values.image.url ? values.image.url : URL.createObjectURL(values.image)} width={100} />
+                  }
                   {errors.image && touched.image ? <span style={{ color: "red" }}>{errors.image}</span> : null}
                   <TextField
                     margin="dense"
