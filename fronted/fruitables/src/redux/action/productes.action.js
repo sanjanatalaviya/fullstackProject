@@ -65,31 +65,30 @@ export const deleteProductes = (id) => async (dispatch) => {
 }
 
 export const editProductes = (product) => async (dispatch) => {
-    // try {
-    //     const response = await axios.put(`http://localhost:8000/api/v1/products/update-products/${product._id}`, {
-    //         headers: {
-    //             "Content-Type": "multipart/form-data",
-    //         },
-    //     });
-    //     console.log(response);
-    //     dispatch({ type: UPDATE_PRODUCTES, payload: response.data.data });
-    // } catch (error) {
-    //     dispatch(errorProductes(error.message))
-    // }
-
     try {
-        const response = await fetch(`localhost:8000/api/v1/productes/update-productes/${product._id}`, {
-            method: 'PUT',
+        const response = await axios.put(`http://localhost:8000/api/v1/productes/update-productes/${product._id}`, product, {
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "multipart/form-data",
             },
-            body: JSON.stringify(product)
         });
-        const finaldata = await response.json();
-        dispatch({ type: UPDATE_PRODUCTES, payload: finaldata })
+        dispatch({ type: UPDATE_PRODUCTES, payload: response.data.data });
     } catch (error) {
-        dispatch(errorProductes(error.message));
+        dispatch(errorProductes(error.message))
     }
+
+    // try {
+    //     const response = await fetch(`localhost:8000/api/v1/productes/update-productes/${product._id}`, {
+    //         method: 'PUT',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(product)
+    //     });
+    //     const finaldata = await response.json();
+    //     dispatch({ type: UPDATE_PRODUCTES, payload: finaldata })
+    // } catch (error) {
+    //     dispatch(errorProductes(error.message));
+    // }
 }
 
 // await axios.put(baseURL + "productes/" + data.id, data)

@@ -43,16 +43,14 @@ export const ProductesReducer = (state = producteState, action) => {
             return {
                 isLoading: false,
                 error: null,
-                products: state.productes.map(product =>
-                    product._id === action.payload._id ? action.payload : product
-                )
-                // productes: state.productes.map((v) => {
-                //     if (v._id === action.payload._id) {
-                //         return action.payload
-                //     } else {
-                //         return v
-                //     }
-                // })
+                // productes: state.productes.map((v) => (v._id === action.payload._id ? action.payload : v)),
+                productes: state.productes.map((v) => {
+                    if (v._id === action.payload._id) {
+                        return action.payload
+                    } else {
+                        return v
+                    }
+                })
             }
         default:
             return state;

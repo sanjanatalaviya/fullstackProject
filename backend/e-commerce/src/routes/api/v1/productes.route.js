@@ -18,6 +18,7 @@ router.post('/add-productes',
 );
 
 router.put('/update-productes/:product_id',
+    upload.single('image'),
     productesController.updateProductes
 );
 

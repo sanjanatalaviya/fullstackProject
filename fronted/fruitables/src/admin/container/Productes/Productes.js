@@ -162,18 +162,18 @@ function Productes(props) {
     },
     validationSchema: productSchema,
     onSubmit: (values, { resetForm }) => {
-      const fileValid = validateFile(values.image);
+      // const fileValid = validateFile(values.image);
 
-      if (fileValid) {
-        if (update) {
-          dispatch(editProductes({ ...values, _id: update }))
-        } else {
-          dispatch(addProductes(values))
-          console.log(values);
-        }
-        resetForm()
-        handleClose()
+      // if (fileValid) {
+      if (update) {
+        dispatch(editProductes({ ...values, _id: update }))
+      } else {
+        dispatch(addProductes(values))
+        console.log(values);
       }
+      resetForm()
+      handleClose()
+      // }
     },
   });
 
@@ -185,36 +185,29 @@ function Productes(props) {
     setFieldValue("subcategory_id", "");
   };
 
-  // const changeSubcategorySelect = (event) => {
-  //   const selectedSubcategoryId = event.target.value;
-  //   setFieldValue("subcategory_id", selectedSubcategoryId);
-  // };
-
   const handlecategoryChange = async (category_id) => {
     const respomse = await fetch(`http://localhost:8000/api/v1/subcategories/getsubByCategory/${category_id}`);
     const data = await respomse.json();
     setselectsub(data.data);
   }
-  // const filteredSubcategories = subcategories.filter(subcategory => subcategory.category_id === values.category_id);
-  // const filteredSubcategories = subcategories && subcategories.filter(subcategory => subcategory.category_id === values.category_id);
 
-  const validateFile = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
-    const maxFileSize = 2 * 1024 * 1024; // 2MB
+  // const validateFile = (file) => {
+  //   const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
+  //   const maxFileSize = 2 * 1024 * 1024; // 2MB
 
-    if (!file) {
-      return true;
-    }
-    if (!allowedTypes.includes(file.type)) {
-      // alert('File type not allowed. Please select a JPEG, PNG, or SVG file.');
-      return false;
-    }
-    if (file.size > maxFileSize) {
-      // alert('File size exceeds the limit of 2MB.');
-      return false;
-    }
-    return true;
-  };
+  //   if (!file) {
+  //     return true;
+  //   }
+  //   if (!allowedTypes.includes(file.type)) {
+  //     alert('File type not allowed. Please select a JPEG, PNG, or SVG file.');
+  //     return false;
+  //   }
+  //   if (file.size > maxFileSize) {
+  //     alert('File size exceeds the limit of 2MB.');
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   return (
     <>
@@ -339,20 +332,24 @@ function Productes(props) {
             </Dialog>
           </React.Fragment>
           <br /><br />
-          <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-              rows={productes.productes}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              getRowId={(row) => row._id}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-            />
-          </div>
+          {productes.productes ? (
+            <div style={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={productes.productes}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
+                }}
+                getRowId={(row) => row._id}
+                pageSizeOptions={[5, 10]}
+                checkboxSelection
+              />
+            </div>
+          ) : (
+            <p>Loading...</p>
+          )}
         </>
       }
     </>
